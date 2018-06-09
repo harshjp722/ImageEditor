@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/cropper.min.css">
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <h1 class="text-center">Javascript cropper Sample</h1>
+    <hr class="separator" />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div class="form-group">
+                    <label for="file">Upload Image</label>
+                    <input type="file" class="form-control" id="CoverImageFile" onchange="readURL(this);" />
+                    <br>
+                    <div id="imageCropper">
+                        <button class="btn" type="button" onclick="cropBannerImage()">Crop Selection</button>
+                        <div class="clearfix">&nbsp;</div>
+                        <div>
+                            <img class="img img-responsive" alt="No Image" id="originalImage" />
+                        </div>
+                    </div>
+                    
+                    <div id="croppedImagePreview">
+                        <hr>
+                        <h3>Preview:</h3>
+                        <img class="img img-responsive" alt="No Image" id="previewImage" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="js/cropper.min.js"></script>
+    <script type="text/Javascript">
+
+        $(document).ready(function(){
+            $('#imageCropper').hide();
+            $('#croppedImagePreview').hide();
+        });
+
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                // Remove old cropper
+                var image = document.getElementById('originalImage');
+                if (image) {
+                    var cropper = image.cropper;
+                    if (cropper) {
+                    cropper.destroy();
+                    $('#croppedImagePreview').hide();
+                    }
+                }
+
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('originalImage').src =  e.target.result;
+                    initializeImageCropper();
+                    $('#imageCropper').show();
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function initializeImageCropper () {
+            var image = document.getElementById('originalImage');
+            var cropper = new Cropper(image, {
+                aspectRatio: 16 / 9,
+                crop: function (event) {
+                    // you can get cropping details here on any changes done while cropping.
+                }
+            });
+        }
+
+        function cropBannerImage() {
+            var image = document.getElementById('originalImage');
+            if (image != null) {
+                var cropper = image.cropper;
+                var canvas = cropper.getCroppedCanvas({
+                    width: 1067,
+                    height: 600,
+                });
+
+                document.getElementById('previewImage').src = canvas.toDataURL();
+                $('#croppedImagePreview').show();
+            }
+        }
+    </script>
+</body>
+
+</html>
